@@ -27,6 +27,11 @@
             android:exported="false"
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
 
+        <activity
+            android:name=".ReservationActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
+
         <!-- Main Activity (launcher) -->
         <activity
             android:name=".MainActivity"

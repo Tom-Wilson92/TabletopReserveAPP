@@ -1,5 +1,6 @@
 package com.example.tabletopreserve
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -86,11 +87,18 @@ class TableListActivity : AppCompatActivity() {
 
                     // Set up adapter
                     val adapter = TableAdapter(tablesList) { table ->
-                        // Handle table selection
+                        // Get table details
+                        val tableId = table["id"] as String
                         val tableNumber = table["tableNumber"] as? Long ?: 0
-                        Toast.makeText(this,
-                            "Selected Table $tableNumber",
-                            Toast.LENGTH_SHORT).show()
+                        val tableType = table["tableType"] as? String ?: "Standard"
+
+                        // Launch reservation activity
+                        val intent = Intent(this, ReservationActivity::class.java)
+                        intent.putExtra(ReservationActivity.EXTRA_SHOP, shop)
+                        intent.putExtra(ReservationActivity.EXTRA_TABLE_ID, tableId)
+                        intent.putExtra(ReservationActivity.EXTRA_TABLE_NUMBER, tableNumber.toInt())
+                        intent.putExtra(ReservationActivity.EXTRA_TABLE_TYPE, tableType)
+                        startActivity(intent)
                     }
                     recyclerView.adapter = adapter
                 }
