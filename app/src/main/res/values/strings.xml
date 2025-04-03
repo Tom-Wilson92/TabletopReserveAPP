@@ -46,4 +46,14 @@
     <string name="location">Location</string>
     <string name="open_now">Open Now</string>
     <string name="closed">Closed</string>
+
+
+    <string name="register">Register</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="full_name">Full Name</string>
+    <string name="login_to_your_account">Login to Your Account</string>
+    <string name="create_account">Create Account</string>
+    <string name="dont_have_account">Don\'t have an account?</string>
+    <string name="already_have_account">Already have an account?</string>
+
 </resources>

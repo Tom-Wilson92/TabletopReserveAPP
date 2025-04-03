@@ -1,5 +1,6 @@
 package com.example.tabletopreserve
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -56,9 +57,8 @@ class MainActivity : AppCompatActivity() {
         val currentUser = auth.currentUser
         if (currentUser == null) {
             // User is not signed in, redirect to login activity
-            // Uncomment this after creating LoginActivity
-            // startActivity(Intent(this, LoginActivity::class.java))
-            // finish()
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish()
         }
     }
 }
