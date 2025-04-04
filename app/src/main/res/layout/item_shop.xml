@@ -15,9 +15,10 @@
         <ImageView
             android:id="@+id/shop_image"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:scaleType="centerCrop"
+            android:layout_height="180dp"
+            android:scaleType="centerInside"
             android:contentDescription="Shop Image"
+            android:background="#F5F5F5"
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@android:drawable/ic_menu_gallery" />
 

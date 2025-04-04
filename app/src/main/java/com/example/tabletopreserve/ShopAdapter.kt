@@ -9,7 +9,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.example.tabletopreserve.models.Shop
 
 class ShopAdapter(
@@ -60,21 +59,18 @@ class ShopAdapter(
         holder.availableTables.text = "Tables available" // This will be updated later
 
         // Load shop image with Glide
-        if (shop.logoUrl.isNotEmpty()) {
+        // The ImageView already has scaleType="centerInside" in the layout XML
+        if (shop.logoUrl != null && shop.logoUrl.isNotEmpty()) {
             // If the shop has a logo URL, load it
             Glide.with(context)
                 .load(shop.logoUrl)
-                .apply(RequestOptions()
-                    .placeholder(R.drawable.default_shop_logo)
-                    .error(R.drawable.default_shop_logo)
-                    .centerCrop())
+                .placeholder(R.drawable.defaultstoreimage)
+                .error(R.drawable.defaultstoreimage)
                 .into(holder.shopImage)
         } else {
-            // Set default shop image based on shop type
-            val defaultImageResId = getDefaultImageForShopType(shop.shopType)
+            // Set default shop image
             Glide.with(context)
-                .load(defaultImageResId)
-                .centerCrop()
+                .load(R.drawable.defaultstoreimage)
                 .into(holder.shopImage)
         }
 
@@ -89,17 +85,4 @@ class ShopAdapter(
     }
 
     override fun getItemCount(): Int = shops.size
-
-    /**
-     * Get the appropriate default image resource based on shop type
-     */
-    private fun getDefaultImageForShopType(shopType: String): Int {
-        return when (shopType) {
-            "game-store" -> R.drawable.default_game_store
-            "dedicated-tables" -> R.drawable.default_gaming_tables
-            "cafe" -> R.drawable.default_gaming_cafe
-            "restaurant" -> R.drawable.default_restaurant
-            else -> R.drawable.default_shop_logo
-        }
-    }
 }
