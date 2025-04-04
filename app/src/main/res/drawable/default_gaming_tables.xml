@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+
+    <!-- Background -->
+    <path
+        android:fillColor="#FF9500"
+    android:pathData="M0,0h120v120h-120z" />
+
+    <!-- Multiple tables -->
+    <!-- Table 1 -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M20,30 L50,30 L50,45 L20,45 Z" />
+
+    <!-- Table 1 legs -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M25,45 L28,45 L28,55 L25,55 Z" />
+
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M42,45 L45,45 L45,55 L42,55 Z" />
+
+    <!-- Table 2 -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M70,30 L100,30 L100,45 L70,45 Z" />
+
+    <!-- Table 2 legs -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M75,45 L78,45 L78,55 L75,55 Z" />
+
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M92,45 L95,45 L95,55 L92,55 Z" />
+
+    <!-- Table 3 -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M20,70 L50,70 L50,85 L20,85 Z" />
+
+    <!-- Table 3 legs -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M25,85 L28,85 L28,95 L25,95 Z" />
+
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M42,85 L45,85 L45,95 L42,95 Z" />
+
+    <!-- Table 4 -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M70,70 L100,70 L100,85 L70,85 Z" />
+
+    <!-- Table 4 legs -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M75,85 L78,85 L78,95 L75,95 Z" />
+
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M92,85 L95,85 L95,95 L92,95 Z" />
+
+    <!-- Gaming pieces scattered around -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M35,37 A3,3 0 1,1 35,37.1" />
+
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M85,37 A3,3 0 1,1 85,37.1" />
+
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M35,77 A3,3 0 1,1 35,77.1" />
+
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M85,77 A3,3 0 1,1 85,77.1" />
+</vector>

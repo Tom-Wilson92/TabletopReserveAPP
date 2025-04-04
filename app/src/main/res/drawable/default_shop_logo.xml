@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+
+    <!-- Background -->
+    <path
+        android:fillColor="#4a6ee0"
+        android:pathData="M0,0h120v120h-120z" />
+
+    <!-- Game table silhouette -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M30,45 L90,45 L90,75 L30,75 Z" />
+
+    <!-- Table legs -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M35,75 L40,75 L40,90 L35,90 Z" />
+
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M80,75 L85,75 L85,90 L80,90 Z" />
+
+    <!-- Dice -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M50,60 L60,60 L60,70 L50,70 Z" />
+
+    <!-- Dice dots -->
+    <path
+        android:fillColor="#4a6ee0"
+        android:pathData="M53,63 A2,2 0 1,1 53,63.1" />
+
+    <path
+        android:fillColor="#4a6ee0"
+        android:pathData="M57,67 A2,2 0 1,1 57,67.1" />
+
+    <!-- Cards -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M65,55 L75,55 L75,70 L65,70 Z" />
+
+    <!-- Game pieces -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M40,55 A3,3 0 1,1 40,55.1" />
+
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M45,50 A3,3 0 1,1 45,50.1" />
+
+    <!-- Shop name placeholder text -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M40,95 L80,95 L80,100 L40,100 Z" />
+</vector>

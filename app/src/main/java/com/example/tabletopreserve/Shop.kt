@@ -20,6 +20,7 @@ data class Shop(
     val shopType: String = "", // "game-store", "dedicated-tables", "cafe"
     val website: String = "",
     val socialMedia: String = "",
+    val logoUrl: String = "", // Added field for shop logo URL
     val amenities: Map<String, Boolean> = mapOf(
         "wifi" to false,
         "food" to false,

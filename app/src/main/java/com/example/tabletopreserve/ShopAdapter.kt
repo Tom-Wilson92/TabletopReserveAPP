@@ -1,5 +1,6 @@
 package com.example.tabletopreserve
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,9 +8,12 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.tabletopreserve.models.Shop
 
 class ShopAdapter(
+    private val context: Context,
     private val shops: List<Shop>,
     private val onShopClickListener: OnShopClickListener
 ) : RecyclerView.Adapter<ShopAdapter.ShopViewHolder>() {
@@ -55,8 +59,24 @@ class ShopAdapter(
         // For now, set placeholder text
         holder.availableTables.text = "Tables available" // This will be updated later
 
-        // Set default image for now
-        holder.shopImage.setImageResource(android.R.drawable.ic_menu_gallery)
+        // Load shop image with Glide
+        if (shop.logoUrl.isNotEmpty()) {
+            // If the shop has a logo URL, load it
+            Glide.with(context)
+                .load(shop.logoUrl)
+                .apply(RequestOptions()
+                    .placeholder(R.drawable.default_shop_logo)
+                    .error(R.drawable.default_shop_logo)
+                    .centerCrop())
+                .into(holder.shopImage)
+        } else {
+            // Set default shop image based on shop type
+            val defaultImageResId = getDefaultImageForShopType(shop.shopType)
+            Glide.with(context)
+                .load(defaultImageResId)
+                .centerCrop()
+                .into(holder.shopImage)
+        }
 
         // Set click listeners
         holder.itemView.setOnClickListener {
@@ -69,4 +89,17 @@ class ShopAdapter(
     }
 
     override fun getItemCount(): Int = shops.size
+
+    /**
+     * Get the appropriate default image resource based on shop type
+     */
+    private fun getDefaultImageForShopType(shopType: String): Int {
+        return when (shopType) {
+            "game-store" -> R.drawable.default_game_store
+            "dedicated-tables" -> R.drawable.default_gaming_tables
+            "cafe" -> R.drawable.default_gaming_cafe
+            "restaurant" -> R.drawable.default_restaurant
+            else -> R.drawable.default_shop_logo
+        }
+    }
 }

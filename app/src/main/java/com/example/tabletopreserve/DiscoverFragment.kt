@@ -45,7 +45,7 @@ class DiscoverFragment : Fragment(), ShopAdapter.OnShopClickListener {
         emptyView = view.findViewById(R.id.empty_view)
 
         // Set up RecyclerView
-        adapter = ShopAdapter(shops, this)
+        adapter = ShopAdapter(requireContext(), shops, this)
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = adapter
 
@@ -84,7 +84,7 @@ class DiscoverFragment : Fragment(), ShopAdapter.OnShopClickListener {
                         try {
                             val shop = document.toObject(Shop::class.java).copy(id = document.id)
                             shops.add(shop)
-                            Log.d(TAG, "Shop loaded: ${shop.storeName}")
+                            Log.d(TAG, "Shop loaded: ${shop.storeName}, Logo URL: ${shop.logoUrl}")
                         } catch (e: Exception) {
                             Log.e(TAG, "Error parsing shop data: ${e.message}")
                         }
@@ -105,9 +105,13 @@ class DiscoverFragment : Fragment(), ShopAdapter.OnShopClickListener {
 
     // ShopAdapter.OnShopClickListener implementation
     override fun onShopClick(shop: Shop) {
-        // For now, just show shop details in a toast
+        // Navigate to shop detail activity
         Toast.makeText(context, "Selected shop: ${shop.storeName}", Toast.LENGTH_SHORT).show()
-        // TODO: Navigate to shop detail activity
+
+        // Here you could implement a detailed shop view
+        // val intent = Intent(context, ShopDetailActivity::class.java)
+        // intent.putExtra("SHOP_ID", shop.id)
+        // startActivity(intent)
     }
 
     override fun onBookClick(shop: Shop) {

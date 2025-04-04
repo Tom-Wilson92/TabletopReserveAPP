@@ -23,6 +23,30 @@
             android:exported="false" />
 
         <activity
+            android:name=".EditProfileActivity"
+            android:exported="false"
+            android:label="Edit Profile"
+            android:parentActivityName=".MainActivity" />
+
+        <activity
+            android:name=".NotificationsActivity"
+            android:exported="false"
+            android:label="Notification Settings"
+            android:parentActivityName=".MainActivity" />
+
+        <activity
+            android:name=".PrivacyActivity"
+            android:exported="false"
+            android:label="Privacy Settings"
+            android:parentActivityName=".MainActivity" />
+
+        <activity
+            android:name=".HelpSupportActivity"
+            android:exported="false"
+            android:label="Help &amp; Support"
+            android:parentActivityName=".MainActivity" />
+
+        <activity
             android:name=".TableListActivity"
             android:exported="false"
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />

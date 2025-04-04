@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+
+    <!-- Background -->
+    <path
+        android:fillColor="#34c759"
+        android:pathData="M0,0h120v120h-120z" />
+
+    <!-- Store building -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M20,40 L100,40 L100,90 L20,90 Z" />
+
+    <!-- Store roof -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M15,40 L105,40 L60,25 Z" />
+
+    <!-- Door -->
+    <path
+        android:fillColor="#34c759"
+        android:pathData="M50,70 L70,70 L70,90 L50,90 Z" />
+
+    <!-- Window -->
+    <path
+        android:fillColor="#34c759"
+        android:pathData="M30,50 L45,50 L45,65 L30,65 Z" />
+
+    <!-- Window -->
+    <path
+        android:fillColor="#34c759"
+        android:pathData="M75,50 L90,50 L90,65 L75,65 Z" />
+
+    <!-- Game box -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M45,95 L60,95 L60,105 L45,105 Z" />
+
+    <!-- Meeple -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M70,95 L75,95 L77,97 L75,103 L70,103 L68,97 Z" />
+</vector>

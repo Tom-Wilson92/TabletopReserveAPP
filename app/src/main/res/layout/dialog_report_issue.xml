@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Please describe the issue you're experiencing:"
+        android:textSize="16sp" />
+
+    <EditText
+        android:id="@+id/issue_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="Describe what happened..."
+        android:inputType="textMultiLine"
+        android:lines="5"
+        android:gravity="top|start" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="What were you doing when this happened?"
+        android:textSize="16sp" />
+
+    <EditText
+        android:id="@+id/issue_steps"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="Steps to reproduce the issue..."
+        android:inputType="textMultiLine"
+        android:lines="3"
+        android:gravity="top|start" />
+
+</LinearLayout>

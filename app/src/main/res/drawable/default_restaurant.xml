@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+
+    <!-- Background -->
+    <path
+        android:fillColor="#8E44AD"
+        android:pathData="M0,0h120v120h-120z" />
+
+    <!-- Plate -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M30,40 A30,10 0 1,0 90,40 A30,10 0 1,0 30,40 Z" />
+
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M30,40 L30,60 A30,10 0 1,0 90,60 L90,40 A30,10 0 1,0 30,40 Z" />
+
+    <!-- Knife -->
+    <path
+        android:fillColor="#8E44AD"
+        android:pathData="M40,30 L45,35 L75,65 L70,70 Z" />
+
+    <!-- Fork -->
+    <path
+        android:fillColor="#8E44AD"
+        android:pathData="M60,30 L65,30 L65,60 L60,60 Z" />
+
+    <path
+        android:fillColor="#8E44AD"
+        android:pathData="M55,35 L60,30 L60,40 L55,45 Z" />
+
+    <path
+        android:fillColor="#8E44AD"
+        android:pathData="M65,30 L70,35 L70,45 L65,40 Z" />
+
+    <!-- Dice on the table -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M50,75 L60,75 L60,85 L50,85 Z" />
+
+    <!-- Dice dots -->
+    <path
+        android:fillColor="#8E44AD"
+        android:pathData="M53,78 A2,2 0 1,1 53,78.1" />
+
+    <path
+        android:fillColor="#8E44AD"
+        android:pathData="M57,82 A2,2 0 1,1 57,82.1" />
+
+    <!-- Game card on the table -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M65,75 L80,75 L80,85 L65,85 Z" />
+</vector>
