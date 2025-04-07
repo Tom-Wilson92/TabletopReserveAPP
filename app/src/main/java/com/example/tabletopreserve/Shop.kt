@@ -43,3 +43,4 @@ data class Shop(
     val rejectedAt: Date? = null,
     val rejectedBy: String = ""
 ) : Serializable
+

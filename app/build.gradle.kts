@@ -43,6 +43,8 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.firebase.messaging.ktx)
+    implementation(libs.firebase.functions.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -51,6 +53,7 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore:24.10.3")
     implementation("com.github.bumptech.glide:glide:4.12.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
+    implementation("com.google.firebase:firebase-messaging:23.1.2")
 }
 
 
