@@ -2,6 +2,7 @@ package com.example.tabletopreserve
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,6 +26,11 @@ class NotificationsFragment : Fragment() {
     private lateinit var emptyView: TextView
     private lateinit var adapter: NotificationsAdapter
     private val notifications = mutableListOf<Map<String, Any>>()
+
+    // Tag for logging
+    companion object {
+        private const val TAG = "NotificationsFragment"
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -70,76 +76,44 @@ class NotificationsFragment : Fragment() {
 
         lifecycleScope.launch {
             try {
-                // Get user's followed shops
-                val userDoc = FirebaseFirestore.getInstance()
-                    .collection("Users")
-                    .document(userId)
-                    .get()
-                    .await()
+                Log.d(TAG, "Starting to load notifications for user: $userId")
 
-                val followedShops = userDoc.get("followedShops") as? List<String> ?: listOf()
-
-                // If not following any shops, show empty state
-                if (followedShops.isEmpty()) {
-                    showEmptyState(getString(R.string.notifications_from_followed_shops))
-                    return@launch
-                }
-
-                // Get notifications from followed shops and for all users
+                // Get notifications - now we're getting ALL notifications
+                // without filtering by followed shops
                 val db = FirebaseFirestore.getInstance()
 
-                // First, get notifications for all users
-                val allNotificationsQuery = db.collection("Notifications")
-                    .whereEqualTo("target", "all")
+                // Query all notifications, ordered by creation date (newest first)
+                val notificationsQuery = db.collection("Notifications")
                     .orderBy("createdAt", Query.Direction.DESCENDING)
-                    .limit(10)
+                    .limit(20)
 
-                // Then, get notifications for followers of shops the user follows
-                val followersNotificationsQuery = db.collection("Notifications")
-                    .whereIn("shopId", followedShops)
-                    .whereEqualTo("target", "followers")
-                    .orderBy("createdAt", Query.Direction.DESCENDING)
-                    .limit(10)
+                Log.d(TAG, "Executing notification query")
+                val notificationsSnapshot = notificationsQuery.get().await()
+                Log.d(TAG, "Query returned ${notificationsSnapshot.size()} notifications")
 
-                // Execute queries
-                val allNotifications = allNotificationsQuery.get().await()
-                val followersNotifications = followersNotificationsQuery.get().await()
-
-                // Combine results
+                // Clear and update the list
                 notifications.clear()
 
-                allNotifications.documents.forEach { doc ->
+                notificationsSnapshot.documents.forEach { doc ->
                     val data = doc.data?.toMutableMap() ?: mutableMapOf()
                     data["id"] = doc.id
                     notifications.add(data)
-                }
-
-                followersNotifications.documents.forEach { doc ->
-                    val data = doc.data?.toMutableMap() ?: mutableMapOf()
-                    data["id"] = doc.id
-                    notifications.add(data)
-                }
-
-                // Sort by date (newest first)
-                notifications.sortByDescending {
-                    (it["createdAt"] as? com.google.firebase.Timestamp)?.toDate()
-                }
-
-                // Limit to 20 most recent
-                if (notifications.size > 20) {
-                    notifications.subList(20, notifications.size).clear()
+                    Log.d(TAG, "Added notification: ${doc.id}, title: ${data["title"]}")
                 }
 
                 // Update UI
                 if (notifications.isEmpty()) {
+                    Log.d(TAG, "No notifications found, showing empty state")
                     showEmptyState(getString(R.string.no_notifications))
                 } else {
+                    Log.d(TAG, "Showing ${notifications.size} notifications")
                     emptyView.visibility = View.GONE
                     recyclerView.visibility = View.VISIBLE
                     adapter.notifyDataSetChanged()
                 }
 
             } catch (e: Exception) {
+                Log.e(TAG, "Error loading notifications", e)
                 showEmptyState(getString(R.string.error_loading_notifications))
             }
         }
@@ -155,7 +129,11 @@ class NotificationsFragment : Fragment() {
         // Track notification open
         val notificationId = notification["id"] as? String ?: return
         lifecycleScope.launch {
-            NotificationManager.trackNotificationOpen(notificationId)
+            try {
+                NotificationManager.trackNotificationOpen(notificationId)
+            } catch (e: Exception) {
+                Log.e(TAG, "Error tracking notification open", e)
+            }
         }
 
         // Handle navigation based on notification type

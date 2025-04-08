@@ -1,6 +1,7 @@
 package com.example.tabletopreserve
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -39,6 +40,9 @@ class ShopAdapter(
     override fun onBindViewHolder(holder: ShopViewHolder, position: Int) {
         val shop = shops[position]
 
+        // Debug log to trace shop information
+        Log.d("ShopAdapter", "Binding shop: ${shop.id} - ${shop.storeName}")
+
         // Set shop data to views
         holder.shopName.text = shop.storeName
 
@@ -76,10 +80,12 @@ class ShopAdapter(
 
         // Set click listeners
         holder.itemView.setOnClickListener {
+            Log.d("ShopAdapter", "Item click for shop: ${shop.id}")
             onShopClickListener.onShopClick(shop)
         }
 
         holder.bookButton.setOnClickListener {
+            Log.d("ShopAdapter", "Book button click for shop: ${shop.id}")
             onShopClickListener.onBookClick(shop)
         }
     }

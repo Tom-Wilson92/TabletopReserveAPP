@@ -61,7 +61,16 @@ class ReservationActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
 
         // Get extras from intent
-        shop = intent.getSerializableExtra(EXTRA_SHOP) as Shop
+        val shopExtra = intent.getSerializableExtra(EXTRA_SHOP)
+        if (shopExtra is Shop) {
+            shop = shopExtra
+        } else {
+            // Handle the error, perhaps finish the activity or show a toast
+            Toast.makeText(this, "Shop data is missing or invalid", Toast.LENGTH_SHORT).show()
+            finish() // Optionally, close the activity if the Shop object is critical
+            return
+        }
+
         tableId = intent.getStringExtra(EXTRA_TABLE_ID) ?: ""
         tableNumber = intent.getIntExtra(EXTRA_TABLE_NUMBER, 0)
         tableType = intent.getStringExtra(EXTRA_TABLE_TYPE) ?: ""

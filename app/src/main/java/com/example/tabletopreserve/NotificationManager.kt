@@ -6,6 +6,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import com.google.firebase.functions.FirebaseFunctions
 import com.google.firebase.functions.ktx.functions
 import com.google.firebase.ktx.Firebase
@@ -69,27 +70,43 @@ class NotificationManager {
             val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return@withContext false
 
             try {
-                // Update user's followed shops list
+                Log.d(TAG, "Following shop with ID: $shopId for user: $userId")
+
+                // Update user's followed shops list - using set with merge instead of update
                 FirebaseFirestore.getInstance()
                     .collection("Users")
                     .document(userId)
-                    .update("followedShops", FieldValue.arrayUnion(shopId))
+                    .set(
+                        mapOf("followedShops" to FieldValue.arrayUnion(shopId)),
+                        SetOptions.merge()
+                    )
                     .await()
 
-                // Update token document to include shop in following array
+                // Create or update token document
                 FirebaseFirestore.getInstance()
                     .collection("UserTokens")
                     .document(userId)
-                    .update("following", FieldValue.arrayUnion(shopId))
+                    .set(
+                        mapOf(
+                            "userId" to userId,
+                            "following" to FieldValue.arrayUnion(shopId),
+                            "enabled" to true,
+                            "platform" to "android",
+                            "updatedAt" to com.google.firebase.Timestamp.now()
+                        ),
+                        SetOptions.merge()
+                    )
                     .await()
 
-                Log.d(TAG, "Shop followed: $shopId")
+                Log.d(TAG, "Shop followed successfully: $shopId")
                 return@withContext true
             } catch (e: Exception) {
                 Log.e(TAG, "Error following shop", e)
+                Log.e(TAG, "Exception details: ${e.message}, ${e.cause}")
                 return@withContext false
             }
         }
+
 
         /**
          * Unfollow a shop to stop receiving notifications
