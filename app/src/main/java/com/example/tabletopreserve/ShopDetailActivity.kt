@@ -17,6 +17,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.tabletopreserve.models.Shop
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -54,6 +55,7 @@ class ShopDetailActivity : AppCompatActivity() {
     private lateinit var tablesAdapter: TablesAdapter
 
     private var shopId: String? = null
+    private lateinit var shop: Shop
     private var isFollowing = false
 
     companion object {
@@ -137,13 +139,8 @@ class ShopDetailActivity : AppCompatActivity() {
                 }
             }
 
-            override fun onTabUnselected(tab: TabLayout.Tab?) {
-                // Not used
-            }
-
-            override fun onTabReselected(tab: TabLayout.Tab?) {
-                // Not used
-            }
+            override fun onTabUnselected(tab: TabLayout.Tab?) {}
+            override fun onTabReselected(tab: TabLayout.Tab?) {}
         })
 
         // Load shop data
@@ -183,23 +180,6 @@ class ShopDetailActivity : AppCompatActivity() {
         noTablesView = findViewById(R.id.no_tables_view)
         tablesProgressBar = findViewById(R.id.tables_progress_bar)
 
-        // Set up RecyclerView
-        tablesAdapter = TablesAdapter(shopTables) { tableId ->
-            // Handle table selection - navigate to reservation screen
-            val selectedTable = shopTables.find { it["id"] == tableId }
-            if (selectedTable != null) {
-                val intent = Intent(this, ReservationActivity::class.java).apply {
-                    putExtra("shop_id", shopId)
-                    putExtra("table_id", tableId)
-                    putExtra("table_number", (selectedTable["tableNumber"] as? Long)?.toInt() ?: 0)
-                    putExtra("table_type", selectedTable["tableType"] as? String ?: "")
-                }
-                startActivity(intent)
-            }
-        }
-        tablesRecyclerView.layoutManager = LinearLayoutManager(this)
-        tablesRecyclerView.adapter = tablesAdapter
-
         // Initially hide the tables container
         tablesContainer.visibility = View.GONE
     }
@@ -236,44 +216,49 @@ class ShopDetailActivity : AppCompatActivity() {
                 // Update UI with shop data
                 val shopData = shopDoc.data
                 if (shopData != null) {
-                    Log.d(TAG, "Shop data loaded: ${shopData["storeName"]}")
-                    shopNameTextView.text = shopData["storeName"] as? String ?: "Unknown Shop"
+                    // Create Shop object for passing to other activities
+                    shop = Shop(
+                        id = shopId!!,
+                        storeName = shopData["storeName"] as? String ?: "Unknown Shop",
+                        address = shopData["address"] as? String ?: "",
+                        city = shopData["city"] as? String ?: "",
+                        county = shopData["county"] as? String ?: "",
+                        postCode = shopData["postCode"] as? String ?: "",
+                        logoUrl = shopData["logoUrl"] as? String ?: ""
+                    )
+
+                    Log.d(TAG, "Shop data loaded: ${shop.storeName}")
+                    shopNameTextView.text = shop.storeName
 
                     // Format address
-                    val address = shopData["address"] as? String ?: ""
-                    val city = shopData["city"] as? String ?: ""
-                    val county = shopData["county"] as? String ?: ""
-                    val postCode = shopData["postCode"] as? String ?: ""
-
                     val fullAddress = StringBuilder()
-                    if (address.isNotEmpty()) fullAddress.append(address)
-                    if (city.isNotEmpty()) {
+                    if (shop.address.isNotEmpty()) fullAddress.append(shop.address)
+                    if (shop.city.isNotEmpty()) {
                         if (fullAddress.isNotEmpty()) fullAddress.append(", ")
-                        fullAddress.append(city)
+                        fullAddress.append(shop.city)
                     }
-                    if (county.isNotEmpty()) {
+                    if (shop.county.isNotEmpty()) {
                         if (fullAddress.isNotEmpty()) fullAddress.append(", ")
-                        fullAddress.append(county)
+                        fullAddress.append(shop.county)
                     }
-                    if (postCode.isNotEmpty()) {
+                    if (shop.postCode.isNotEmpty()) {
                         if (fullAddress.isNotEmpty()) fullAddress.append(", ")
-                        fullAddress.append(postCode)
+                        fullAddress.append(shop.postCode)
                     }
 
                     shopAddressTextView.text = fullAddress.toString()
 
-                    // Set description
-                    shopDescriptionTextView.text = shopData["description"] as? String ?: "No description available"
+                    // Set description (if available in future schema)
+                    val description = shopData["description"] as? String
+                    shopDescriptionTextView.text = description ?: "No description available"
 
                     // Set activity title
-                    supportActionBar?.title = shopData["storeName"] as? String ?: "Shop Details"
+                    supportActionBar?.title = shop.storeName
 
-                    // Load shop image using Glide (same as in ShopAdapter)
-                    val logoUrl = shopData["logoUrl"] as? String
-                    if (!logoUrl.isNullOrEmpty()) {
-                        // If the shop has a logo URL, load it
+                    // Load shop image using Glide
+                    if (!shop.logoUrl.isNullOrEmpty()) {
                         Glide.with(this@ShopDetailActivity)
-                            .load(logoUrl)
+                            .load(shop.logoUrl)
                             .placeholder(R.drawable.defaultstoreimage)
                             .error(R.drawable.defaultstoreimage)
                             .into(shopImageView)
@@ -479,6 +464,14 @@ class ShopDetailActivity : AppCompatActivity() {
                     shopTables.add(tableData)
                 }
 
+                // Set up RecyclerView with both shop and tables
+                tablesAdapter = TablesAdapter(shopTables, shop) { tableId ->
+                    // Optional callback if needed in the future
+                    Log.d(TAG, "Table clicked: $tableId")
+                }
+                tablesRecyclerView.layoutManager = LinearLayoutManager(this@ShopDetailActivity)
+                tablesRecyclerView.adapter = tablesAdapter
+
                 // Update UI
                 tablesProgressBar.visibility = View.GONE
                 tablesRecyclerView.visibility = View.VISIBLE
@@ -555,6 +548,7 @@ class ShopDetailActivity : AppCompatActivity() {
     // Tables adapter class
     private class TablesAdapter(
         private val tables: List<Map<String, Any>>,
+        private val shop: Shop,
         private val onTableClick: (String) -> Unit
     ) : RecyclerView.Adapter<TablesAdapter.TableViewHolder>() {
 
@@ -575,12 +569,13 @@ class ShopDetailActivity : AppCompatActivity() {
         override fun onBindViewHolder(holder: TableViewHolder, position: Int) {
             val table = tables[position]
 
-            // Set table data to views
+            // Set table number
             holder.tableNumber.text = "Table ${table["tableNumber"]}"
 
             // Format table type for display
             var tableTypeDisplay = "Standard"
-            when (table["tableType"] as? String) {
+            val tableType = table["tableType"] as? String ?: "standard"
+            when (tableType) {
                 "standard" -> tableTypeDisplay = "Standard Gaming Table"
                 "large" -> tableTypeDisplay = "Large Gaming Table"
                 "rpg" -> tableTypeDisplay = "RPG/D&D Table"
@@ -591,6 +586,7 @@ class ShopDetailActivity : AppCompatActivity() {
                 "pokemon" -> tableTypeDisplay = "Pokémon TCG Table"
                 "magic" -> tableTypeDisplay = "Magic: The Gathering Table"
                 "boardgame" -> tableTypeDisplay = "Board Game Table"
+                else -> tableTypeDisplay = "Other Gaming Table"
             }
             holder.tableType.text = tableTypeDisplay
 
@@ -607,20 +603,36 @@ class ShopDetailActivity : AppCompatActivity() {
                 holder.tableDescription.visibility = View.GONE
             }
 
-            // Set click listener for book button
+            // Set click listener for book button to use ReservationActivity
             holder.bookButton.setOnClickListener {
                 val tableId = table["id"] as? String
-                if (tableId != null) {
-                    onTableClick(tableId)
+                val tableNumber = table["tableNumber"] as? Long ?: 0
+
+                // Create intent to start ReservationActivity
+                val context = holder.itemView.context
+                val intent = Intent(context, ReservationActivity::class.java).apply {
+                    putExtra(ReservationActivity.EXTRA_SHOP, shop)
+                    putExtra(ReservationActivity.EXTRA_TABLE_ID, tableId)
+                    putExtra(ReservationActivity.EXTRA_TABLE_NUMBER, tableNumber.toInt())
+                    putExtra(ReservationActivity.EXTRA_TABLE_TYPE, tableType)
                 }
+                context.startActivity(intent)
             }
 
-            // Set click listener for the whole item
+            // Set click listener for the whole item to use ReservationActivity
             holder.itemView.setOnClickListener {
                 val tableId = table["id"] as? String
-                if (tableId != null) {
-                    onTableClick(tableId)
+                val tableNumber = table["tableNumber"] as? Long ?: 0
+
+                // Create intent to start ReservationActivity
+                val context = holder.itemView.context
+                val intent = Intent(context, ReservationActivity::class.java).apply {
+                    putExtra(ReservationActivity.EXTRA_SHOP, shop)
+                    putExtra(ReservationActivity.EXTRA_TABLE_ID, tableId)
+                    putExtra(ReservationActivity.EXTRA_TABLE_NUMBER, tableNumber.toInt())
+                    putExtra(ReservationActivity.EXTRA_TABLE_TYPE, tableType)
                 }
+                context.startActivity(intent)
             }
         }
 
