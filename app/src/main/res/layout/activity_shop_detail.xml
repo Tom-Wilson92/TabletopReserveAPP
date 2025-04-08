@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ShopDetailActivity">
+
+    <!-- Loading View -->
+    <ProgressBar
+        android:id="@+id/loading_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
+
+    <!-- Tab Layout -->
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tab_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="@color/purple_500"
+        app:tabTextColor="@android:color/white"
+        app:tabSelectedTextColor="@android:color/white"
+        app:tabIndicatorColor="@android:color/white">
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Info" />
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Events" />
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tables" />
+    </com.google.android.material.tabs.TabLayout>
+
+    <!-- Shop Info Container -->
+    <ScrollView
+        android:id="@+id/content_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/tab_layout"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Shop Image -->
+            <ImageView
+                android:id="@+id/shop_image"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/defaultstoreimage"
+                android:contentDescription="Shop Image" />
+
+            <!-- Shop Name -->
+            <TextView
+                android:id="@+id/shop_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                tools:text="Shop Name" />
+
+            <!-- Shop Address -->
+            <TextView
+                android:id="@+id/shop_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textSize="16sp"
+                tools:text="123 Main Street, Anytown" />
+
+            <!-- Follow Button -->
+            <Button
+                android:id="@+id/follow_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="@color/purple_500"
+                android:text="Follow"
+                android:textColor="@android:color/white" />
+
+            <!-- Shop Description Section -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="About This Shop"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/shop_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textSize="16sp"
+                tools:text="This is a description of the shop. It provides information about what games they specialize in and what services they offer." />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Events Container -->
+    <RelativeLayout
+        android:id="@+id/events_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/tab_layout"
+        android:visibility="gone">
+
+        <!-- Events Progress Bar -->
+        <ProgressBar
+            android:id="@+id/events_progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" />
+
+        <!-- No Events Text -->
+        <TextView
+            android:id="@+id/no_events_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="No events found"
+            android:textSize="18sp"
+            android:visibility="gone" />
+
+        <!-- Events RecyclerView -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/events_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="16dp"
+            android:clipToPadding="false"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <!-- Tables Container -->
+    <RelativeLayout
+        android:id="@+id/tables_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/tab_layout"
+        android:visibility="gone">
+
+        <!-- Tables Progress Bar -->
+        <ProgressBar
+            android:id="@+id/tables_progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" />
+
+        <!-- No Tables Text -->
+        <TextView
+            android:id="@+id/no_tables_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="No tables found"
+            android:textSize="18sp"
+            android:visibility="gone" />
+
+        <!-- Tables RecyclerView -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/tables_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="16dp"
+            android:clipToPadding="false"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+</RelativeLayout>

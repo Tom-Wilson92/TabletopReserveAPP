@@ -36,6 +36,10 @@ class MainActivity : AppCompatActivity() {
                     loadFragment(ReservationsFragment())
                     true
                 }
+                R.id.nav_notifications -> { // This part might be missing
+                    loadFragment(NotificationsFragment())
+                    true
+                }
                 R.id.nav_profile -> {
                     loadFragment(ProfileFragment())
                     true

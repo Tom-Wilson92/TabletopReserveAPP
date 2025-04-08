@@ -12,6 +12,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
+import com.google.firebase.messaging.FirebaseMessaging
 
 class LoginActivity : AppCompatActivity() {
 
@@ -68,6 +70,7 @@ class LoginActivity : AppCompatActivity() {
         val currentUser = auth.currentUser
         if (currentUser != null) {
             // User is already signed in, redirect to MainActivity
+            registerFcmToken()
             startActivity(Intent(this, MainActivity::class.java))
             finish()
         }
@@ -102,6 +105,7 @@ class LoginActivity : AppCompatActivity() {
                 if (task.isSuccessful) {
                     // Sign in success
                     Log.d(TAG, "signInWithEmail:success")
+                    registerFcmToken()
                     startActivity(Intent(this, MainActivity::class.java))
                     finish()
                 } else {
@@ -136,5 +140,26 @@ class LoginActivity : AppCompatActivity() {
                     Toast.makeText(this, "Failed to send reset email: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
                 }
             }
+    }
+
+    fun registerFcmToken() {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w(TAG, "Fetching FCM registration token failed", task.exception)
+                return@addOnCompleteListener
+            }
+
+            val token = task.result
+            val currentUser = FirebaseAuth.getInstance().currentUser
+
+            if (currentUser != null) {
+                val tokenData = mapOf("fcmToken" to token)
+
+                FirebaseFirestore.getInstance().collection("Users").document(currentUser.uid)
+                    .set(tokenData, SetOptions.merge())
+                    .addOnSuccessListener { Log.d(TAG, "FCM Token saved successfully") }
+                    .addOnFailureListener { e -> Log.e(TAG, "Failed to save FCM Token", e) }
+            }
+        }
     }
 }

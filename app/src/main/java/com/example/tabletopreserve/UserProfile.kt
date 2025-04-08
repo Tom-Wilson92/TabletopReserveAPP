@@ -9,9 +9,9 @@ data class UserProfile(
     var phoneNumber: String = "",
     var favoriteGames: List<String> = listOf(),
     var notificationPreferences: NotificationPreferences = NotificationPreferences(),
-    val createdAt: Long = 0
+    val createdAt: Long = 0,
+    var fcmToken: String? = null
 ) : Serializable {
-    // Empty constructor for Firestore
     constructor() : this(id = "")
 }
 

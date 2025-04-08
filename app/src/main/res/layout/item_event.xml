@@ -15,54 +15,48 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- Table Number -->
+        <!-- Event Name -->
         <TextView
-            android:id="@+id/table_number"
+            android:id="@+id/event_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="18sp"
             android:textStyle="bold"
             android:textColor="@android:color/black"
-            tools:text="Table 1" />
+            tools:text="Warhammer 40K Tournament" />
 
-        <!-- Table Type -->
+        <!-- Event Date -->
         <TextView
-            android:id="@+id/table_type"
+            android:id="@+id/event_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:drawableStart="@android:drawable/ic_menu_my_calendar"
+            android:drawablePadding="8dp"
+            android:gravity="center_vertical"
+            android:textSize="14sp"
+            tools:text="Saturday, April 10, 2025" />
+
+        <!-- Event Time -->
+        <TextView
+            android:id="@+id/event_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
+            android:drawableStart="@android:drawable/ic_menu_recent_history"
+            android:drawablePadding="8dp"
+            android:gravity="center_vertical"
+            android:textSize="14sp"
+            tools:text="6:00 PM - 10:00 PM" />
+
+        <!-- Event Description -->
+        <TextView
+            android:id="@+id/event_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
             android:textSize="15sp"
-            android:textStyle="italic"
-            tools:text="Warhammer 40K Table" />
-
-        <!-- Table Capacity -->
-        <TextView
-            android:id="@+id/table_capacity"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:textSize="14sp"
-            tools:text="Capacity: 4 people" />
-
-        <!-- Table Description -->
-        <TextView
-            android:id="@+id/table_description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:textSize="14sp"
-            tools:text="This table is perfect for Warhammer 40K games, with terrain and measuring tools provided. The table surface is 6' x 4' with a high-quality gaming mat." />
-
-        <!-- Book Button -->
-        <Button
-            android:id="@+id/book_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:layout_gravity="end"
-            android:backgroundTint="@color/purple_500"
-            android:text="Book Table"
-            android:textColor="@android:color/white" />
+            tools:text="Join us for our monthly Warhammer 40K tournament. There will be prizes for the top three players. Bring your own army or use one of our house armies." />
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>

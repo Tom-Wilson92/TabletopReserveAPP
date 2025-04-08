@@ -56,4 +56,24 @@
     <string name="dont_have_account">Don\'t have an account?</string>
     <string name="already_have_account">Already have an account?</string>
 
+    <string name="notification_settings">Notification Settings</string>
+    <string name="push_notifications">Push Notifications</string>
+    <string name="notifications_description">Receive updates about events, promotions, and news from shops you follow</string>
+    <string name="followed_shops">Followed Shops</string>
+    <string name="followed_shops_description">You\'ll receive notifications from these shops</string>
+    <string name="no_shops_followed">You aren\'t following any shops yet.\nVisit a shop\'s page to follow it and receive notifications.</string>
+    <string name="default_notification_channel_id">tabletop_notifications</string>
+
+
+
+    <string name="login_to_view_notifications">Please login to view notifications</string>
+    <string name="loading_notifications">Loading notifications…</string>
+    <string name="notifications_from_followed_shops">You\'ll see notifications from shops you follow here</string>
+    <string name="no_notifications">No notifications yet</string>
+    <string name="error_loading_notifications">Error loading notifications</string>
+    <string name="notification_type_event">EVENT</string>
+    <string name="notification_type_promo">PROMO</string>
+    <string name="notification_type_update">UPDATE</string>
+    <string name="collection_notifications">Notifications</string>
+
 </resources>

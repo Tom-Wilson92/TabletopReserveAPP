@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tabletopreserve.models.Shop
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
 import java.util.Locale
 
 class DiscoverFragment : Fragment(), ShopAdapter.OnShopClickListener {
@@ -190,13 +189,11 @@ class DiscoverFragment : Fragment(), ShopAdapter.OnShopClickListener {
 
     // ShopAdapter.OnShopClickListener implementation
     override fun onShopClick(shop: Shop) {
-        // Navigate to shop detail activity
-        Toast.makeText(context, "Selected shop: ${shop.storeName}", Toast.LENGTH_SHORT).show()
-
-        // Here you could implement a detailed shop view
-        // val intent = Intent(context, ShopDetailActivity::class.java)
-        // intent.putExtra("SHOP_ID", shop.id)
-        // startActivity(intent)
+        // FIXED: Now properly navigate to shop detail activity
+        Log.d(TAG, "Shop clicked: ${shop.id} - ${shop.storeName}")
+        val intent = Intent(requireContext(), ShopDetailActivity::class.java)
+        intent.putExtra("shop_id", shop.id)
+        startActivity(intent)
     }
 
     override fun onBookClick(shop: Shop) {
