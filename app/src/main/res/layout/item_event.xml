@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="12dp"
+    android:layout_margin="8dp"
     app:cardCornerRadius="8dp"
-    app:cardElevation="3dp">
+    app:cardElevation="4dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,48 +13,44 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- Event Name -->
         <TextView
             android:id="@+id/event_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="Event Name"
             android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="@android:color/black"
-            tools:text="Warhammer 40K Tournament" />
+            android:textStyle="bold" />
 
-        <!-- Event Date -->
         <TextView
             android:id="@+id/event_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:drawableStart="@android:drawable/ic_menu_my_calendar"
-            android:drawablePadding="8dp"
-            android:gravity="center_vertical"
-            android:textSize="14sp"
-            tools:text="Saturday, April 10, 2025" />
+            android:text="Event Date"
+            android:textSize="14sp" />
 
-        <!-- Event Time -->
         <TextView
             android:id="@+id/event_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:drawableStart="@android:drawable/ic_menu_recent_history"
-            android:drawablePadding="8dp"
-            android:gravity="center_vertical"
-            android:textSize="14sp"
-            tools:text="6:00 PM - 10:00 PM" />
+            android:text="Event Time"
+            android:textSize="14sp" />
 
-        <!-- Event Description -->
         <TextView
             android:id="@+id/event_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:textSize="15sp"
-            tools:text="Join us for our monthly Warhammer 40K tournament. There will be prizes for the top three players. Bring your own army or use one of our house armies." />
+            android:layout_marginTop="8dp"
+            android:text="Event Description"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/book_event_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Book Event" />
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>

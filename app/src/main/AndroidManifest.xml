@@ -31,6 +31,15 @@
             android:parentActivityName=".MainActivity" />
 
         <activity
+            android:name=".EventBookingActivity"
+            android:exported="false"
+            android:parentActivityName=".ShopDetailActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ShopDetailActivity" />
+        </activity>
+
+        <activity
             android:name=".NotificationsActivity"
             android:exported="false"
             android:label="Notification Settings"
