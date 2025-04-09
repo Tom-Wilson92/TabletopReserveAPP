@@ -115,6 +115,8 @@ class ReservationsFragment : Fragment() {
             return
         }
 
+        Log.d(TAG, "Loading bookings for user: ${currentUser.uid}")
+
         progressBar.visibility = View.VISIBLE
         emptyView.visibility = View.GONE
         recyclerView.visibility = View.GONE
@@ -151,6 +153,7 @@ class ReservationsFragment : Fragment() {
     }
 
     private fun checkAndDisplayBookings(loadingTasks: List<Boolean>) {
+        Log.d(TAG, "Checking and displaying bookings. Loading tasks: $loadingTasks")
         // If all loading tasks are complete, we can display the results
         if (!loadingTasks.contains(true)) {
             progressBar.visibility = View.GONE
@@ -170,24 +173,27 @@ class ReservationsFragment : Fragment() {
                 recyclerView.visibility = View.VISIBLE
 
                 // Sort bookings by date
-                val sortedBookings = if (isPastBookings) {
-                    bookings.sortedByDescending { booking ->
-                        val timestamp = when (booking["bookingType"]) {
-                            TYPE_TABLE -> booking["reservationTime"] as? com.google.firebase.Timestamp
-                            TYPE_EVENT -> booking["eventDate"] as? com.google.firebase.Timestamp
-                            else -> null
-                        }
-                        timestamp?.toDate()
+                val sortedBookings = bookings.sortedWith(compareBy { booking ->
+                    val timestamp = when (booking["bookingType"]) {
+                        TYPE_TABLE -> booking["reservationTime"] as? com.google.firebase.Timestamp
+                        TYPE_EVENT -> booking["eventDate"] as? com.google.firebase.Timestamp
+                        else -> null
                     }
-                } else {
-                    bookings.sortedBy { booking ->
-                        val timestamp = when (booking["bookingType"]) {
-                            TYPE_TABLE -> booking["reservationTime"] as? com.google.firebase.Timestamp
-                            TYPE_EVENT -> booking["eventDate"] as? com.google.firebase.Timestamp
-                            else -> null
-                        }
-                        timestamp?.toDate()
+                    val date = timestamp?.toDate()
+
+                    // Log for debugging
+                    Log.d(TAG, "Sorting booking: ${booking["id"]}, Date: $date")
+
+                    // Return date or min/max value based on sort direction
+                    if (isPastBookings) {
+                        date ?: Date(0) // Oldest possible date for null dates in past view
+                    } else {
+                        date ?: Date(Long.MAX_VALUE) // Future date for null dates in upcoming view
                     }
+                })
+
+                if (isPastBookings) {
+                    sortedBookings.reversed() // Most recent past bookings first
                 }
 
                 // Update the list and adapter
@@ -203,16 +209,28 @@ class ReservationsFragment : Fragment() {
         var query = db.collection("Reservations")
             .whereEqualTo("userId", userId)
 
+        Log.d(TAG, "Querying table reservations with userId: $userId")
+
         // Add time filter based on selected tab
         if (isPastBookings) {
-            // Past reservations (before now)
             query = query.whereLessThan("reservationTime", now)
                 .orderBy("reservationTime", Query.Direction.DESCENDING)
+            Log.d(TAG, "Filtering for past reservations")
         } else {
-            // Upcoming reservations (after now)
             query = query.whereGreaterThanOrEqualTo("reservationTime", now)
                 .orderBy("reservationTime", Query.Direction.ASCENDING)
+            Log.d(TAG, "Filtering for upcoming reservations")
         }
+
+        query.get()
+            .addOnSuccessListener { documents ->
+                Log.d(TAG, "Table reservations query returned ${documents.size()} documents")
+                // Rest of the existing code...
+            }
+            .addOnFailureListener { exception ->
+                Log.e(TAG, "Error loading table reservations", exception)
+                callback(true)
+            }
 
         // Execute the query
         query.get()
@@ -264,20 +282,23 @@ class ReservationsFragment : Fragment() {
         var query = db.collection("EventBookings")
             .whereEqualTo("userId", userId)
 
+        Log.d(TAG, "Querying event bookings with userId: $userId")
+
         // Add time filter based on selected tab
         if (isPastBookings) {
-            // Past event bookings (before now)
             query = query.whereLessThan("eventDate", now)
                 .orderBy("eventDate", Query.Direction.DESCENDING)
+            Log.d(TAG, "Filtering for past event bookings")
         } else {
-            // Upcoming event bookings (after now)
             query = query.whereGreaterThanOrEqualTo("eventDate", now)
                 .orderBy("eventDate", Query.Direction.ASCENDING)
+            Log.d(TAG, "Filtering for upcoming event bookings")
         }
 
         // Execute the query
         query.get()
             .addOnSuccessListener { documents ->
+                Log.d(TAG, "Event bookings query returned ${documents.size()} documents")
                 if (!documents.isEmpty) {
                     // Process each event booking
                     for (document in documents) {
