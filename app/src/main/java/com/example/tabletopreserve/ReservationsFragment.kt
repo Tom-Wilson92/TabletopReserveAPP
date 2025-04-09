@@ -127,6 +127,9 @@ class ReservationsFragment : Fragment() {
         // Clear existing bookings
         bookings.clear()
 
+        // Make sure to notify the adapter that data was cleared
+        adapter.notifyDataSetChanged()
+
         // List to track loading state
         val loadingTasks = mutableListOf<Boolean>()
 
@@ -150,6 +153,11 @@ class ReservationsFragment : Fragment() {
                 checkAndDisplayBookings(loadingTasks)
             }
         }
+
+        // If no loading tasks were added (shouldn't happen), update UI
+        if (loadingTasks.isEmpty()) {
+            checkAndDisplayBookings(loadingTasks)
+        }
     }
 
     private fun checkAndDisplayBookings(loadingTasks: List<Boolean>) {
@@ -167,10 +175,11 @@ class ReservationsFragment : Fragment() {
 
                 emptyView.visibility = View.VISIBLE
                 recyclerView.visibility = View.GONE
+
+                Log.d(TAG, "No bookings to display")
             } else {
                 // Bookings found
                 emptyView.visibility = View.GONE
-                recyclerView.visibility = View.VISIBLE
 
                 // Sort bookings by date
                 val sortedBookings = bookings.sortedWith(compareBy { booking ->
@@ -192,13 +201,25 @@ class ReservationsFragment : Fragment() {
                     }
                 })
 
-                if (isPastBookings) {
-                    sortedBookings.reversed() // Most recent past bookings first
+                // Apply proper sorting order
+                val finalSortedBookings = if (isPastBookings) {
+                    // Reverse order for past bookings to show most recent first
+                    sortedBookings.reversed()
+                } else {
+                    // Keep ascending order for upcoming bookings
+                    sortedBookings
                 }
 
                 // Update the list and adapter
                 bookings.clear()
-                bookings.addAll(sortedBookings)
+                bookings.addAll(finalSortedBookings)
+
+                Log.d(TAG, "Displaying ${bookings.size} bookings")
+
+                // Show the RecyclerView
+                recyclerView.visibility = View.VISIBLE
+
+                // Notify adapter of data changes
                 adapter.notifyDataSetChanged()
             }
         }
@@ -222,20 +243,16 @@ class ReservationsFragment : Fragment() {
             Log.d(TAG, "Filtering for upcoming reservations")
         }
 
+        // Execute the query ONCE
         query.get()
             .addOnSuccessListener { documents ->
                 Log.d(TAG, "Table reservations query returned ${documents.size()} documents")
-                // Rest of the existing code...
-            }
-            .addOnFailureListener { exception ->
-                Log.e(TAG, "Error loading table reservations", exception)
-                callback(true)
-            }
 
-        // Execute the query
-        query.get()
-            .addOnSuccessListener { documents ->
+                // Process each reservation separately to fetch shop names
                 if (!documents.isEmpty) {
+                    val reservationCount = documents.size()
+                    var processedCount = 0
+
                     // Process each table reservation
                     for (document in documents) {
                         val reservationData = document.data.toMutableMap()
@@ -253,23 +270,57 @@ class ReservationsFragment : Fragment() {
                                         "Unknown Shop"
 
                                     reservationData["shopName"] = shopName
+
+                                    // Add to bookings list
                                     bookings.add(reservationData)
-                                    adapter.notifyDataSetChanged()
+
+                                    // Track processed documents
+                                    processedCount++
+
+                                    // If all processed, call the callback
+                                    if (processedCount >= reservationCount) {
+                                        callback(true)
+                                    } else {
+                                        // Update the adapter without waiting for all to complete
+                                        adapter.notifyDataSetChanged()
+                                    }
                                 }
                                 .addOnFailureListener { e ->
                                     Log.e(TAG, "Error loading shop info", e)
                                     reservationData["shopName"] = "Unknown Shop"
                                     bookings.add(reservationData)
-                                    adapter.notifyDataSetChanged()
+
+                                    // Track processed documents
+                                    processedCount++
+
+                                    // If all processed, call the callback
+                                    if (processedCount >= reservationCount) {
+                                        callback(true)
+                                    } else {
+                                        // Update the adapter without waiting for all to complete
+                                        adapter.notifyDataSetChanged()
+                                    }
                                 }
                         } else {
                             reservationData["shopName"] = "Unknown Shop"
                             bookings.add(reservationData)
-                            adapter.notifyDataSetChanged()
+
+                            // Track processed documents
+                            processedCount++
+
+                            // If all processed, call the callback
+                            if (processedCount >= reservationCount) {
+                                callback(true)
+                            } else {
+                                // Update the adapter without waiting for all to complete
+                                adapter.notifyDataSetChanged()
+                            }
                         }
                     }
+                } else {
+                    // No reservations found, call the callback immediately
+                    callback(true)
                 }
-                callback(true)
             }
             .addOnFailureListener { exception ->
                 Log.e(TAG, "Error loading table reservations", exception)
@@ -299,7 +350,11 @@ class ReservationsFragment : Fragment() {
         query.get()
             .addOnSuccessListener { documents ->
                 Log.d(TAG, "Event bookings query returned ${documents.size()} documents")
+
                 if (!documents.isEmpty) {
+                    val bookingCount = documents.size()
+                    var processedCount = 0
+
                     // Process each event booking
                     for (document in documents) {
                         val bookingData = document.data.toMutableMap()
@@ -321,26 +376,68 @@ class ReservationsFragment : Fragment() {
 
                                         bookingData["shopName"] = name
                                         bookings.add(bookingData)
-                                        adapter.notifyDataSetChanged()
+
+                                        // Track processed documents
+                                        processedCount++
+
+                                        // If all processed, call the callback
+                                        if (processedCount >= bookingCount) {
+                                            callback(true)
+                                        } else {
+                                            // Update the adapter without waiting for all to complete
+                                            adapter.notifyDataSetChanged()
+                                        }
                                     }
                                     .addOnFailureListener { e ->
                                         Log.e(TAG, "Error loading shop info", e)
                                         bookingData["shopName"] = "Unknown Shop"
                                         bookings.add(bookingData)
-                                        adapter.notifyDataSetChanged()
+
+                                        // Track processed documents
+                                        processedCount++
+
+                                        // If all processed, call the callback
+                                        if (processedCount >= bookingCount) {
+                                            callback(true)
+                                        } else {
+                                            // Update the adapter without waiting for all to complete
+                                            adapter.notifyDataSetChanged()
+                                        }
                                     }
                             } else {
                                 bookingData["shopName"] = "Unknown Shop"
                                 bookings.add(bookingData)
-                                adapter.notifyDataSetChanged()
+
+                                // Track processed documents
+                                processedCount++
+
+                                // If all processed, call the callback
+                                if (processedCount >= bookingCount) {
+                                    callback(true)
+                                } else {
+                                    // Update the adapter without waiting for all to complete
+                                    adapter.notifyDataSetChanged()
+                                }
                             }
                         } else {
                             bookings.add(bookingData)
-                            adapter.notifyDataSetChanged()
+
+                            // Track processed documents
+                            processedCount++
+
+                            // If all processed, call the callback
+                            if (processedCount >= bookingCount) {
+                                callback(true)
+                            } else {
+                                // Update the adapter without waiting for all to complete
+                                adapter.notifyDataSetChanged()
+                            }
                         }
                     }
+                } else {
+                    // No event bookings found, call the callback immediately
+                    callback(true)
                 }
-                callback(true)
             }
             .addOnFailureListener { exception ->
                 Log.e(TAG, "Error loading event bookings", exception)
