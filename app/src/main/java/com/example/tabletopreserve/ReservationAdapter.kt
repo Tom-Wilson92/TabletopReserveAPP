@@ -69,7 +69,7 @@ class ReservationAdapter(
         holder.statusText.text = when (status) {
             "confirmed" -> "Confirmed"
             "completed" -> "Completed"
-            "canceled" -> "Canceled"
+            "cancelled" -> "Cancelled"
             else -> "Pending"
         }
 
@@ -77,7 +77,7 @@ class ReservationAdapter(
         val statusBgResource = when (status) {
             "confirmed" -> android.R.color.holo_green_light
             "completed" -> android.R.color.holo_green_dark
-            "canceled" -> android.R.color.holo_red_light
+            "cancelled" -> android.R.color.holo_red_light
             else -> android.R.color.holo_orange_light
         }
         holder.statusText.setBackgroundResource(statusBgResource)
@@ -91,8 +91,8 @@ class ReservationAdapter(
             onCancel(reservation)
         }
 
-        // Hide cancel button if reservation is already canceled or completed
-        if (status == "canceled" || status == "completed") {
+        // Hide cancel button if reservation is already cancelled or completed
+        if (status == "cancelled" || status == "completed") {
             holder.cancelButton.visibility = View.GONE
         } else {
             holder.cancelButton.visibility = View.VISIBLE

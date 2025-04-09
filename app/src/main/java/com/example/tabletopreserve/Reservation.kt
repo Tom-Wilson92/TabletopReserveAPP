@@ -10,7 +10,7 @@ data class Reservation(
     val tableNumber: Int = 0,
     val reservationTime: Date? = null,
     val duration: Int = 0, // in hours
-    val status: String = "pending", // "pending", "confirmed", "completed", "canceled"
+    val status: String = "pending", // "pending", "confirmed", "completed", "cancelled"
     val customerName: String = "",
     val customerPhone: String = "",
     val customerEmail: String = "",
@@ -24,7 +24,7 @@ data class Reservation(
     val confirmedBy: String = "",
     val completedAt: Date? = null,
     val completedBy: String = "",
-    val canceledAt: Date? = null,
-    val canceledBy: String = "",
+    val cancelledAt: Date? = null,
+    val cancelledBy: String = "",
     val cancellationReason: String = ""
 ) : Serializable

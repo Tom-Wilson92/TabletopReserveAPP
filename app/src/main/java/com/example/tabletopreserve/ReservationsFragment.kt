@@ -273,23 +273,23 @@ class ReservationsFragment : Fragment() {
     private fun cancelReservation(reservationId: String) {
         progressBar.visibility = View.VISIBLE
 
-        // Update reservation status to canceled
+
         val updates = HashMap<String, Any>()
-        updates["status"] = "canceled"
-        updates["canceledAt"] = com.google.firebase.Timestamp.now()
-        updates["canceledBy"] = auth.currentUser?.uid ?: ""
+        updates["status"] = "cancelled"
+        updates["cancelledAt"] = com.google.firebase.Timestamp.now()
+        updates["cancelledBy"] = auth.currentUser?.uid ?: ""
 
         db.collection("Reservations").document(reservationId)
             .update(updates)
             .addOnSuccessListener {
                 progressBar.visibility = View.GONE
-                Toast.makeText(context, "Reservation canceled", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Reservation cancelled", Toast.LENGTH_SHORT).show()
                 loadReservations()
             }
             .addOnFailureListener { e ->
                 progressBar.visibility = View.GONE
                 Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
-                Log.e(TAG, "Error canceling reservation", e)
+                Log.e(TAG, "Error cancelling reservation", e)
             }
     }
 }

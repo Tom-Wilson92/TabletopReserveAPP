@@ -54,6 +54,7 @@ dependencies {
     implementation(libs.glide)
     annotationProcessor(libs.compiler)
     implementation(libs.firebase.messaging)
+    implementation(libs.material.v190)
 }
 
 
