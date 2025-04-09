@@ -10,7 +10,8 @@ data class UserProfile(
     var favoriteGames: List<String> = listOf(),
     var notificationPreferences: NotificationPreferences = NotificationPreferences(),
     val createdAt: Long = 0,
-    var fcmToken: String? = null
+    var fcmToken: String? = null,
+    val phone: String? = null
 ) : Serializable {
     constructor() : this(id = "")
 }

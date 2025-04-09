@@ -166,9 +166,7 @@ class ShopDetailActivity : AppCompatActivity() {
         eventsProgressBar = findViewById(R.id.events_progress_bar)
 
         // Set up RecyclerView
-        eventsAdapter = EventsAdapter(shopEvents)
         eventsRecyclerView.layoutManager = LinearLayoutManager(this)
-        eventsRecyclerView.adapter = eventsAdapter
 
         // Initially hide the events container
         eventsContainer.visibility = View.GONE
@@ -406,11 +404,14 @@ class ShopDetailActivity : AppCompatActivity() {
                     shopEvents.add(eventData)
                 }
 
+                // Create adapter with shop name and ID for booking functionality
+                eventsAdapter = EventsAdapter(shopEvents, shop.storeName, shopId!!)
+                eventsRecyclerView.adapter = eventsAdapter
+
                 // Update UI
                 eventsProgressBar.visibility = View.GONE
                 eventsRecyclerView.visibility = View.VISIBLE
                 noEventsView.visibility = View.GONE
-                eventsAdapter.notifyDataSetChanged()
 
             } catch (e: Exception) {
                 Log.e(TAG, "Error loading shop events", e)
@@ -489,14 +490,18 @@ class ShopDetailActivity : AppCompatActivity() {
     }
 
     // Events adapter class
-    private class EventsAdapter(private val events: List<Map<String, Any>>) :
-        RecyclerView.Adapter<EventsAdapter.EventViewHolder>() {
+    private class EventsAdapter(
+        private val events: List<Map<String, Any>>,
+        private val shopName: String,
+        private val shopId: String
+    ) : RecyclerView.Adapter<EventsAdapter.EventViewHolder>() {
 
         class EventViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             val eventName: TextView = view.findViewById(R.id.event_name)
             val eventDate: TextView = view.findViewById(R.id.event_date)
             val eventTime: TextView = view.findViewById(R.id.event_time)
             val eventDescription: TextView = view.findViewById(R.id.event_description)
+            val bookEventButton: Button = view.findViewById(R.id.book_event_button)
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventViewHolder {
@@ -509,36 +514,61 @@ class ShopDetailActivity : AppCompatActivity() {
             val event = events[position]
 
             // Set event data to views
-            holder.eventName.text = event["name"] as? String ?: "Unknown Event"
+            val eventName = event["name"] as? String ?: "Unknown Event"
+            holder.eventName.text = eventName
+
+            // Get event date (timestamp)
+            val timestamp = event["date"] as? com.google.firebase.Timestamp
+            var eventDate: Date? = null
 
             // Format date
-            val timestamp = event["date"] as? com.google.firebase.Timestamp
             if (timestamp != null) {
-                val eventDate = timestamp.toDate()
+                eventDate = timestamp.toDate()
                 val dateFormat = SimpleDateFormat("EEEE, MMMM d, yyyy", Locale.getDefault())
                 holder.eventDate.text = dateFormat.format(eventDate)
             } else {
                 holder.eventDate.text = "Date not available"
             }
 
-            // Set time
+            // Get event time
             val startTime = event["startTime"] as? String ?: ""
             val endTime = event["endTime"] as? String ?: ""
+            val eventTimeString: String
 
             if (startTime.isNotEmpty() && endTime.isNotEmpty()) {
-                holder.eventTime.text = "$startTime - $endTime"
+                eventTimeString = "$startTime - $endTime"
+                holder.eventTime.text = eventTimeString
             } else {
-                holder.eventTime.text = "Time not specified"
+                eventTimeString = "Time not specified"
+                holder.eventTime.text = eventTimeString
             }
 
             // Set description
-            holder.eventDescription.text = event["description"] as? String ?: ""
+            val description = event["description"] as? String ?: ""
+            holder.eventDescription.text = description
 
             // If description is empty, hide the TextView
             if (holder.eventDescription.text.isBlank()) {
                 holder.eventDescription.visibility = View.GONE
             } else {
                 holder.eventDescription.visibility = View.VISIBLE
+            }
+
+            // Set click listener for book event button
+            holder.bookEventButton.setOnClickListener {
+                val context = holder.itemView.context
+                val eventId = event["id"] as String
+
+                // Create intent for EventBookingActivity
+                val intent = Intent(context, EventBookingActivity::class.java).apply {
+                    putExtra(EventBookingActivity.EXTRA_SHOP_ID, shopId)
+                    putExtra(EventBookingActivity.EXTRA_SHOP_NAME, shopName)
+                    putExtra(EventBookingActivity.EXTRA_EVENT_ID, eventId)
+                    putExtra(EventBookingActivity.EXTRA_EVENT_NAME, eventName)
+                    putExtra(EventBookingActivity.EXTRA_EVENT_DATE, eventDate)
+                    putExtra(EventBookingActivity.EXTRA_EVENT_TIME, eventTimeString)
+                }
+                context.startActivity(intent)
             }
         }
 

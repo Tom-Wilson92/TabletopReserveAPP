@@ -65,9 +65,9 @@ class ReservationActivity : AppCompatActivity() {
         if (shopExtra is Shop) {
             shop = shopExtra
         } else {
-            // Handle the error, perhaps finish the activity or show a toast
+
             Toast.makeText(this, "Shop data is missing or invalid", Toast.LENGTH_SHORT).show()
-            finish() // Optionally, close the activity if the Shop object is critical
+            finish()
             return
         }
 

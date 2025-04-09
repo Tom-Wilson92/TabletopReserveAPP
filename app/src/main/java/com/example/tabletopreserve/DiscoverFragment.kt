@@ -189,7 +189,7 @@ class DiscoverFragment : Fragment(), ShopAdapter.OnShopClickListener {
 
     // ShopAdapter.OnShopClickListener implementation
     override fun onShopClick(shop: Shop) {
-        // FIXED: Now properly navigate to shop detail activity
+
         Log.d(TAG, "Shop clicked: ${shop.id} - ${shop.storeName}")
         val intent = Intent(requireContext(), ShopDetailActivity::class.java)
         intent.putExtra("shop_id", shop.id)
@@ -197,7 +197,7 @@ class DiscoverFragment : Fragment(), ShopAdapter.OnShopClickListener {
     }
 
     override fun onBookClick(shop: Shop) {
-        // Navigate to table booking activity
+
         val intent = Intent(context, TableListActivity::class.java)
         intent.putExtra(TableListActivity.EXTRA_SHOP, shop)
         startActivity(intent)
