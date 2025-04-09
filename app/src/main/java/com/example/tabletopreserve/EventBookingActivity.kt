@@ -168,8 +168,10 @@ class EventBookingActivity : AppCompatActivity() {
         val bookingData = hashMapOf(
             "eventId" to eventId,
             "shopId" to shopId,
+            "shopName" to shopName,
             "eventName" to eventName,
             "eventDate" to eventDate,
+            "eventTimeString" to eventTimeString, // Add the time string to Firestore
             "status" to "confirmed",
             "customerName" to customerName,
             "customerPhone" to customerPhone,

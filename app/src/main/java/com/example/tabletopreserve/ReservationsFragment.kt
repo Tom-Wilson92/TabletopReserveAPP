@@ -32,6 +32,7 @@ class ReservationsFragment : Fragment() {
     private lateinit var adapter: BookingAdapter
     private var isPastBookings = false
     private var currentFilterTab = 0 // 0 = All, 1 = Tables, 2 = Events
+    private var isInitialLoad = true
 
     companion object {
         private const val TAG = "ReservationsFragment"
@@ -93,15 +94,13 @@ class ReservationsFragment : Fragment() {
             override fun onTabReselected(tab: TabLayout.Tab?) {}
         })
 
-        // Load upcoming bookings by default
-        loadBookings()
-
+        // Load upcoming bookings by default - will happen in onResume
         return view
     }
 
     override fun onResume() {
         super.onResume()
-        // Reload bookings when the fragment becomes visible again
+        // Load bookings when the fragment becomes visible
         loadBookings()
     }
 
@@ -140,8 +139,11 @@ class ReservationsFragment : Fragment() {
         if (currentFilterTab == 0 || currentFilterTab == 1) {
             loadingTasks.add(true)
             loadTableReservations(currentUser.uid, now) { loaded ->
-                loadingTasks[loadingTasks.indexOf(true)] = false
-                checkAndDisplayBookings(loadingTasks)
+                val index = loadingTasks.indexOf(true)
+                if (index >= 0) {
+                    loadingTasks[index] = false
+                    checkAndDisplayBookings(loadingTasks)
+                }
             }
         }
 
@@ -149,8 +151,11 @@ class ReservationsFragment : Fragment() {
         if (currentFilterTab == 0 || currentFilterTab == 2) {
             loadingTasks.add(true)
             loadEventBookings(currentUser.uid, now) { loaded ->
-                loadingTasks[loadingTasks.indexOf(true)] = false
-                checkAndDisplayBookings(loadingTasks)
+                val index = loadingTasks.indexOf(true)
+                if (index >= 0) {
+                    loadingTasks[index] = false
+                    checkAndDisplayBookings(loadingTasks)
+                }
             }
         }
 
